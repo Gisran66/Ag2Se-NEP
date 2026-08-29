@@ -1,0 +1,8 @@
+category,records,unique_exact_records
+low_phase_perturb_and_aimd,113,113
+high_phase_aimd,144,144
+specified_plane_interface_aimd,406,404
+ag_defects,47,47
+low_phase_active_learning,380,380
+high_phase_active_learning,630,630
+all,1720,1718

@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local environments and machine-specific files
+Lib/
+Scripts/
+Include/
+pyvenv.cfg
+*.log
+gpumd_*.out
+gpumd_*.err
+slurm-*.out
+
+# Local rerun figures; curated previews live in figures/
+nep_train/train.png
+

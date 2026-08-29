@@ -1,0 +1,31 @@
+{
+  "dataset": "nep_train/train.xyz",
+  "format": "NEP-compatible extended XYZ",
+  "sha256": "FB9B3AE6C4352EDEF07AAF2E26B072617C736E2B21BB16460521CFEA4511896C",
+  "bytes": 33117309,
+  "records": 1720,
+  "exact_unique_records": 1718,
+  "atoms_total": 296739,
+  "species_atom_counts": {
+    "Ag": 197823,
+    "Se": 98916
+  },
+  "atoms_per_record": [143, 144, 145, 161, 162, 163, 168, 216, 288],
+  "labels_present_in_every_record": ["Lattice", "pbc", "Energy", "Virial", "forces"],
+  "nonfinite_energy_or_force_values": 0,
+  "energy_eV_per_atom_range": [-3.5278188175694445, -3.2532781291925463],
+  "maximum_absolute_force_eV_per_A": 13.197175025939941,
+  "source_concatenation_order": [
+    "train-cubic.xyz",
+    "train-low.xyz",
+    "train-jm.xyz",
+    "train-old.xyz"
+  ],
+  "source_components_are_not_duplicated_in_this_release": true,
+  "independent_test_set_present": false,
+  "notes": [
+    "The final dataset intentionally preserves the exact record sequence used for training.",
+    "One 168-atom interface record occurs three times; see duplicate_records.csv.",
+    "The maximum force belongs to the archived training domain and has not been removed in this release draft."
+  ]
+}
