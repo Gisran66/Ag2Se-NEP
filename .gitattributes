@@ -7,6 +7,8 @@ nep_train/*.restart -text
 nep_train/nep.txt -text
 
 # Keep repository-authored metadata deterministic across platforms.
+.gitattributes text eol=lf
+.gitignore text eol=lf
 *.md text eol=lf
 *.json text eol=lf
 *.csv text eol=lf
