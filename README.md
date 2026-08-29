@@ -1,6 +1,6 @@
 # Ag2Se NEP training example and fitted potential
 
-> **Release-candidate status:** the scientific files and checksums are locally verified. Repository URL, visibility, authors/citation, license, and the exact production GPUMD build remain pending before publication.
+> **Private staging status:** the repository is <https://github.com/Gisran66/Ag2Se-NEP> and remains private. The scientific files and checksums have been verified locally and by an independent re-clone from GitHub. Authors/citation, a reuse license, and the exact production GPUMD build remain pending before any public release.
 
 [中文说明](README_zh.md)
 
@@ -86,4 +86,4 @@ Verify all published files against `SHA256SUMS.txt`. `.gitattributes` disables G
 - `nep_train/nep.in`: `35ED458D7C77A4B61EDCB619A9F9F8B3F974F1081B1F586DEF974EB117EF2CA6`
 - `nep_train/nep.txt`: `92E43F46A96D048075BCA60C61CA4886ED523EC65A31CB8680446ECEAF38B26F`
 
-Authors, paper/DOI, recommended citation, and licenses are **[PENDING]**. Repository visibility alone does not grant reuse permission.
+No reuse license is included in this private staging repository. Authors, paper/DOI, recommended citation, and public-release licensing are **[PENDING]**; repository visibility alone does not grant reuse permission.

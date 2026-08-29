@@ -1,6 +1,6 @@
 # Ag2Se NEP 训练示例与最终势函数
 
-> **发布候选状态：** 科学文件与哈希已在本地验证；目标仓库、可见性、作者/引用、许可和生产 GPUMD 精确构建仍需确认。
+> **私有暂存状态：** 仓库为 <https://github.com/Gisran66/Ag2Se-NEP>，当前保持 private。科学文件与哈希已在本地核验，并通过从 GitHub 独立重新克隆复核。作者/引用、复用许可和生产 GPUMD 精确构建仍须在任何公开发布前补充。
 
 [English README](README.md)
 
@@ -61,4 +61,4 @@ potential nep.txt
 - `nep_train/nep.in`: `35ED458D7C77A4B61EDCB619A9F9F8B3F974F1081B1F586DEF974EB117EF2CA6`
 - `nep_train/nep.txt`: `92E43F46A96D048075BCA60C61CA4886ED523EC65A31CB8680446ECEAF38B26F`
 
-作者、论文/DOI、推荐引用和许可均为 **[待补充]**。仓库公开本身不能替代明确许可。
+当前私有暂存仓库未附加复用许可。作者、论文/DOI、推荐引用以及公开发布时采用的许可仍为 **[待补充]**；仓库可见性本身不能替代明确许可。
