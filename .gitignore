@@ -12,6 +12,5 @@ gpumd_*.out
 gpumd_*.err
 slurm-*.out
 
-# Local rerun figures; curated previews live in figures/
-nep_train/train.png
-
+# Locally generated training plot
+nep_train/training_results.png

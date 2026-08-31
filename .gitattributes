@@ -14,6 +14,7 @@ nep_train/nep.txt -text
 *.csv text eol=lf
 *.tsv text eol=lf
 *.py text eol=lf
+*.m text eol=lf
 SHA256SUMS.txt text eol=lf
 
 *.png binary

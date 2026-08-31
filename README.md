@@ -1,12 +1,12 @@
-# Ag2Se NEP training example and fitted potential
-
-> **Private staging status:** the repository is <https://github.com/Gisran66/Ag2Se-NEP> and remains private. The scientific files and checksums have been verified locally and by an independent re-clone from GitHub. Authors/citation, a reuse license, and the exact production GPUMD build remain pending before any public release.
+# Ag2Se NEP potential and training data
 
 [中文说明](README_zh.md)
 
-This package follows the single-folder layout of the official [GPUMD `examples/nep_train`](https://github.com/brucefan1983/GPUMD/tree/master/examples/nep_train) example. All files required to inspect the archived training run or reuse the fitted Ag--Se potential are grouped in `nep_train/`.
+Ag–Se neuroevolution potential (NEP) and the associated training archive, organized following the [GPUMD `examples/nep_train`](https://github.com/brucefan1983/GPUMD/tree/master/examples/nep_train) layout.
 
-## Folder layout
+**Download the fitted potential: [`nep_train/nep.txt`](nep_train/nep.txt).** To download everything, use **Code → Download ZIP**, or clone this repository.
+
+## Files
 
 ```text
 nep_train/
@@ -16,74 +16,53 @@ nep_train/
 ├── nep.in
 ├── nep.restart
 ├── nep.txt
-├── plot_results.py
+├── plot_results.m
 ├── stress_train.out
 ├── train.xyz
 └── virial_train.out
 ```
 
-The official example uses `plot_results.m`. This package uses the project's actual Python plotting script as `plot_results.py` because it dynamically covers the Ag2Se energy/force ranges and includes the archived stress output. Reusing the PbTe-specific MATLAB script unchanged would impose inappropriate fixed plot ranges.
+`nep.txt` is the fitted potential; `nep.in` contains the training settings; `train.xyz` contains the labeled training structures; `nep.restart` is the saved training state. The `.out` files contain the training loss and NEP/reference comparisons. These nine scientific files are preserved byte-for-byte from the original training directory. `plot_results.m` is a new plotting helper for this archive, with data-dependent axis limits.
 
-Additional compact provenance and integrity files are in `metadata/`; preview figures are in `figures/`.
+Existing figure previews are retained in [`figures/`](figures): [training summary](figures/training_summary.png) and [training parity](figures/training_parity.png).
 
-## Dataset and provenance
+## Use the potential
 
-`nep_train/train.xyz` is the exact training archive used for the fitted model:
-
-- 1,720 labeled records and 296,739 atom instances;
-- 197,823 Ag and 98,916 Se atom instances;
-- 143--288 atoms per record;
-- lattice, periodic-boundary flags, total energy, forces, and nine-component virial in every record;
-- 1,718 exact unique records.
-
-One 168-atom selected-interface record occurs three times at one-based record indices 796, 830, and 898. It is retained to reproduce the actual fit. The final file is the byte-exact concatenation of `train-cubic.xyz`, `train-low.xyz`, `train-jm.xyz`, and `train-old.xyz` in that order; the four component files are not duplicated here.
-
-The associated V10 manuscript/SI records VASP/PAW/PBEsol training labels with a 450 eV plane-wave cutoff, `EDIFF=1e-6 eV`, `ISMEAR=0`, `SIGMA=0.05 eV`, Gamma-centered meshes from `KSPACING=0.2 A^-1`, `PREC=Normal`, `LREAL=Auto`, `LASPH=.TRUE.`, and `ADDGRID=.TRUE.`. Original per-calculation training inputs are not included, so these remain manuscript-recorded metadata rather than a repository-level raw-input audit. Licensed VASP PAW files are not redistributed.
-
-## Model and training
-
-The archived log records GPUMD 5.5 and a completed 150,000-generation fit. The exact source tag/commit, local modification status, compiler/CUDA settings, and executable SHA-256 are **[PENDING]**.
-
-`nep.in` defines an Ag/Se NEP4-ZBL model with 6/4 A radial/angular cutoffs, `n_max=4/4`, basis size 12/12, `l_max=4/2/0`, 50 hidden neurons, batch size 2,000, and energy/force/virial weights 1.0/1.0/0.1.
-
-Training-record metrics:
-
-| Quantity | MAE | RMSE | R2 | Points |
-| --- | ---: | ---: | ---: | ---: |
-| Energy | 3.155 meV/atom | 4.130 meV/atom | 0.9932 | 1,720 |
-| Force | 44.175 meV/A | 59.346 meV/A | 0.9755 | 890,217 |
-| Stress | 0.0606 GPa | 0.0910 GPa | 0.9974 | 10,320 |
-
-**No independent `test.xyz` is present. These values and parity plots are training-set diagnostics, not holdout accuracy.**
-
-## Use
-
-Run from inside `nep_train/` with the exact NEP-capable executable appropriate to a verified GPUMD installation:
-
-```text
-path/to/nep
-```
-
-This will start or continue training according to `nep.in`; preserve `nep.restart` before any continuation that may overwrite outputs. To regenerate the archived summary plot after installing NumPy and Matplotlib:
-
-```text
-python plot_results.py save
-```
-
-For GPUMD deployment, copy `nep_train/nep.txt` into a clean simulation directory and add:
+Copy `nep_train/nep.txt` into your GPUMD simulation directory and reference it in `run.in`:
 
 ```text
 potential nep.txt
 ```
 
-Preserve the element order `Ag Se`. A successful load is not scientific validation; new phases, temperatures, defects, interfaces, or transport calculations require short-run stability checks and target-state validation.
+The model is NEP4 with ZBL and declares the elements `Ag Se`. The training input specifies radial/angular cutoffs of 6/4 Å and 150,000 generations. Consult [`nep.in`](nep_train/nep.in) for the complete settings and the [GPUMD documentation](https://gpumd.org/) for simulation inputs. Applicability to new structures or conditions must be assessed separately.
 
-## Integrity, citation, and license
+## Plot the training results
 
-Verify all published files against `SHA256SUMS.txt`. `.gitattributes` disables Git line-ending normalization for the archived scientific artifacts, including the historically mixed-line-ending `train.xyz`, so a fresh cross-platform clone retains the recorded bytes. Core fingerprints:
+In MATLAB, change the current folder to `nep_train` and run:
 
-- `nep_train/train.xyz`: `FB9B3AE6C4352EDEF07AAF2E26B072617C736E2B21BB16460521CFEA4511896C`
-- `nep_train/nep.in`: `35ED458D7C77A4B61EDCB619A9F9F8B3F974F1081B1F586DEF974EB117EF2CA6`
-- `nep_train/nep.txt`: `92E43F46A96D048075BCA60C61CA4886ED523EC65A31CB8680446ECEAF38B26F`
+```matlab
+metrics = plot_results;
+```
 
-No reuse license is included in this private staging repository. Authors, paper/DOI, recommended citation, and public-release licensing are **[PENDING]**; repository visibility alone does not grant reuse permission.
+Optionally save the figure:
+
+```matlab
+metrics = plot_results('training_results.png');
+```
+
+The helper plots energy, force, virial, stress, and training losses, and reports MAE, RMSE, and R². Metrics use all valid components; dense parity panels display a deterministic subset of at most 100,000 points. No extra MATLAB toolboxes are required. Do not rerun training in this archive without making a separate copy, because training can overwrite the supplied potential and outputs.
+
+## Training archive
+
+- 1,720 labeled structures and 296,739 atom instances (Ag: 197,823; Se: 98,916).
+- 1,718 exact unique structures: one structure occurs three times and is intentionally retained to preserve the actual training set.
+- Training-set RMSE: **4.130 meV/atom** for energy, **59.346 meV/Å** for force components, and **0.0910 GPa** for stress components.
+- **No independent test set is included. These metrics describe the training fit, not holdout accuracy.**
+
+## Integrity and reference
+
+`SHA256SUMS.txt` records file checksums. Git preserves the original bytes of the scientific files, including the historical line endings in `train.xyz`.
+
+Repository: https://github.com/Gisran66/Ag2Se-NEP. When referring to a particular model version, record the repository commit as well as the URL.
+
+The files are provided for public inspection and download. No explicit reuse license is included.

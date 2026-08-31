@@ -1,10 +1,12 @@
-# Ag2Se NEP 训练示例与最终势函数
-
-> **私有暂存状态：** 仓库为 <https://github.com/Gisran66/Ag2Se-NEP>，当前保持 private。科学文件与哈希已在本地核验，并通过从 GitHub 独立重新克隆复核。作者/引用、复用许可和生产 GPUMD 精确构建仍须在任何公开发布前补充。
+# Ag2Se NEP 势函数与训练数据
 
 [English README](README.md)
 
-本发布候选直接采用 GPUMD 官方 [`examples/nep_train`](https://github.com/brucefan1983/GPUMD/tree/master/examples/nep_train) 的单文件夹思路，把训练数据、最终势、续训状态、损失和全部训练输出放入 `nep_train/`：
+本仓库公开 Ag–Se 神经演化势（NEP）及其训练数据，采用 [GPUMD `examples/nep_train`](https://github.com/brucefan1983/GPUMD/tree/master/examples/nep_train) 的目录形式，供论文读者查看和下载。
+
+**最终势函数：[`nep_train/nep.txt`](nep_train/nep.txt)。** 下载全部文件可点击 **Code → Download ZIP**，或克隆仓库。
+
+## 文件结构
 
 ```text
 nep_train/
@@ -14,51 +16,53 @@ nep_train/
 ├── nep.in
 ├── nep.restart
 ├── nep.txt
-├── plot_results.py
+├── plot_results.m
 ├── stress_train.out
 ├── train.xyz
 └── virial_train.out
 ```
 
-官方 PbTe 示例使用 `plot_results.m`。这里保留项目实际使用的 Python 绘图脚本并命名为 `plot_results.py`，因为它会按 Ag2Se 数据动态设置坐标范围并绘制 stress；若直接复制官方 MATLAB 脚本，其中固定的 PbTe 能量和力范围并不适合本数据。
+`nep.txt` 为最终势函数，`nep.in` 为训练参数，`train.xyz` 为带标签的训练结构，`nep.restart` 为训练重启状态；各 `.out` 文件保存训练损失及 NEP 与参考值的比较。以上 9 个科学文件均与原始训练目录逐字节一致。`plot_results.m` 是为本归档新编写的绘图辅助文件，坐标范围随数据自动调整。
 
-## 数据和模型事实
+已有图片保留在 [`figures/`](figures)：[训练汇总图](figures/training_summary.png)和[训练拟合对比图](figures/training_parity.png)。
 
-- `train.xyz` 含 1,720 条标注记录、296,739 个原子实例；Ag 197,823，Se 98,916。
-- 每帧均有晶格、周期边界、总能、原子力和 9 分量 virial；extxyz 训练模式验证通过。
-- 共有 1,718 条精确唯一记录；同一 168 原子界面记录在第 796、830、898 帧出现三次。为复现真实训练，未做事后去重。
-- 最终数据由 `train-cubic.xyz`、`train-low.xyz`、`train-jm.xyz`、`train-old.xyz` 按此顺序字节级拼接；本包不重复放入四个分块。
-- 训练日志记录 GPUMD 5.5、150,000 代正常完成；精确 tag/commit、源码修改状态、编译器/CUDA 和可执行文件哈希仍为 **[待补充]**。
-- 训练集能量 MAE/RMSE 为 3.155/4.130 meV/atom，力为 44.175/59.346 meV/A，应力为 0.0606/0.0910 GPa。
+## 使用势函数
 
-**目录中没有独立 `test.xyz`；以上指标和 parity 图只是训练集诊断，不是模型泛化精度。**
-
-关联 V10 主文/SI 记录的训练标签设置为 VASP、PAW、PBEsol、450 eV、`EDIFF=1e-6 eV`、`ISMEAR=0`、`SIGMA=0.05 eV`、`KSPACING=0.2 A^-1`，并记录 `PREC=Normal`、`LREAL=Auto`、`LASPH=.TRUE.`、`ADDGRID=.TRUE.`。原始训练单点输入尚未随包提供，因此这些目前属于稿件元数据，不是仓库内逐任务原始输入核验结果。VASP PAW 授权文件不再分发。
-
-## 使用
-
-在 `nep_train/` 内运行已经核验的、支持 NEP 的 GPUMD 可执行文件，例如 `path/to/nep`。因为目录包含 `nep.restart`，再次训练前要先备份现有结果，避免覆盖最终模型和输出。
-
-安装 NumPy 和 Matplotlib 后，可重画训练汇总：
-
-```text
-python plot_results.py save
-```
-
-用于 GPUMD 时，把 `nep.txt` 复制到干净的模拟目录，并在 `run.in` 中写：
+将 `nep_train/nep.txt` 复制到自己的 GPUMD 模拟目录，并在 `run.in` 中引用：
 
 ```text
 potential nep.txt
 ```
 
-所有下游结构必须保持元素顺序 `Ag Se`。能加载势函数不等于通过科学验证；新的相、温度、缺陷、界面和输运条件仍要做短时稳定性及目标物理量验证。
+模型为带 ZBL 的 NEP4，声明的元素顺序为 `Ag Se`。训练输入中的径向/角向截断半径为 6/4 Å，训练代数为 150,000。完整参数见 [`nep.in`](nep_train/nep.in)，模拟输入规则见 [GPUMD 文档](https://gpumd.org/)。对新结构或新工况的适用性需另行验证。
 
-## 完整性、引用和许可
+## 绘制训练结果
 
-用 `SHA256SUMS.txt` 校验全部文件。`.gitattributes` 已禁止 Git 对归档科学文件执行行尾归一化；这对历史上混合行尾的 `train.xyz` 尤其必要，可以保证跨平台重新 clone 后仍保持记录的字节内容。核心 SHA-256：
+在 MATLAB 中将当前目录切换到 `nep_train`，运行：
 
-- `nep_train/train.xyz`: `FB9B3AE6C4352EDEF07AAF2E26B072617C736E2B21BB16460521CFEA4511896C`
-- `nep_train/nep.in`: `35ED458D7C77A4B61EDCB619A9F9F8B3F974F1081B1F586DEF974EB117EF2CA6`
-- `nep_train/nep.txt`: `92E43F46A96D048075BCA60C61CA4886ED523EC65A31CB8680446ECEAF38B26F`
+```matlab
+metrics = plot_results;
+```
 
-当前私有暂存仓库未附加复用许可。作者、论文/DOI、推荐引用以及公开发布时采用的许可仍为 **[待补充]**；仓库可见性本身不能替代明确许可。
+也可以保存图片：
+
+```matlab
+metrics = plot_results('training_results.png');
+```
+
+程序绘制能量、力、virial、应力和训练损失，并输出 MAE、RMSE、R²。指标使用全部有效分量；点数较多的比较图最多显示确定性抽样的 100,000 个点。不需要额外 MATLAB 工具箱。重新训练前请另建副本，以免覆盖归档中的势函数和训练结果。
+
+## 训练归档说明
+
+- 1,720 个带标签结构，共 296,739 个原子实例，其中 Ag 为 197,823，Se 为 98,916。
+- 精确唯一结构为 1,718 个；其中一个结构出现三次，为保留实际训练集而未事后去重。
+- 训练集 RMSE：能量 **4.130 meV/atom**，力分量 **59.346 meV/Å**，应力分量 **0.0910 GPa**。
+- **未提供独立测试集。上述指标是训练拟合误差，不代表独立测试精度。**
+
+## 完整性与引用
+
+`SHA256SUMS.txt` 提供文件校验值。科学文件保留原始字节内容，包括 `train.xyz` 的历史行尾格式。
+
+仓库地址：https://github.com/Gisran66/Ag2Se-NEP 。引用特定模型版本时，建议同时记录仓库提交编号。
+
+文件公开供查看和下载；当前未附加明确的复用许可证。
